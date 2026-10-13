@@ -1,6 +1,6 @@
 {
   "name": "deadwatch",
-  "version": "0.36.163",
+  "version": "0.36.164",
   "private": true,
   "description": "Deadwatch twin-stick survival game desktop package",
   "author": "OuterHeavenX",
@@ -23,7 +23,7 @@
     "artifactName": "Deadwatch-${version}-${arch}.${ext}",
     "asar": true,
     "files": [
-      "deadwatch-index.html",
+      "index.html",
       "deadwatch-*.js",
       "main.js",
       "package.json"

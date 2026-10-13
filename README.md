@@ -40,10 +40,10 @@ npm install
 npm run dist:linux
 ```
 
-The output is written to `dist/`. Copy `Deadwatch-0.36.163-x86_64.AppImage` to the Deck, make it executable, and add it to Steam as a non-Steam game:
+The output is written to `dist/`. Copy `Deadwatch-0.36.164-x86_64.AppImage` to the Deck, make it executable, and add it to Steam as a non-Steam game:
 
 ```sh
-chmod +x Deadwatch-0.36.163-x86_64.AppImage
+chmod +x Deadwatch-0.36.164-x86_64.AppImage
 ```
 
 In Desktop Mode, open Steam, choose **Games > Add a Non-Steam Game**, browse to the AppImage, then return to Gaming Mode. The native Deck controls use the standard gamepad layout.
@@ -52,4 +52,4 @@ The `.tar.gz` build is also provided for systems where AppImage mounting is unav
 
 ## Browser build
 
-`deadwatch-index.html` is the self-contained browser build. The numbered JavaScript files are the corresponding source modules.
+`index.html` is the self-contained browser build and the GitHub Pages entry point. The numbered JavaScript files are the corresponding source modules.
