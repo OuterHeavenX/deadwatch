@@ -1,0 +1,49 @@
+{
+  "name": "deadwatch",
+  "version": "0.36.162",
+  "private": true,
+  "description": "Deadwatch twin-stick survival game desktop package",
+  "author": "OuterHeavenX",
+  "desktopName": "com.outerheavenx.deadwatch",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start:windowed": "electron . --windowed",
+    "test:smoke": "electron . --smoke-test",
+    "dist:linux": "electron-builder --linux AppImage tar.gz --x64",
+    "dist:windows": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.outerheavenx.deadwatch",
+    "productName": "Deadwatch",
+    "artifactName": "Deadwatch-${version}-${arch}.${ext}",
+    "asar": true,
+    "files": [
+      "deadwatch-index.html",
+      "deadwatch-*.js",
+      "main.js",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "tar.gz"
+      ],
+      "category": "Game",
+      "executableName": "deadwatch",
+      "syncDesktopName": true,
+      "synopsis": "Twin-stick survival game",
+      "desktop": {
+        "entry": {
+          "Name": "Deadwatch",
+          "Comment": "Hold the line in a twin-stick survival game",
+          "Categories": "Game;ActionGame;"
+        }
+      }
+    }
+  }
+}
