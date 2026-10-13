@@ -244,7 +244,7 @@ class ColdSnapAudio{
  }
 }
 
-const C=DeadwatchCore,$=s=>document.getElementById(s),game=new C.Game(),renderer=new Deadwatch3D.Renderer3D($('gameCanvas')),gunEffects=new DeadwatchGunEffects.Overlay($('gunEffectsCanvas'),renderer),captureCanvas=document.createElement('canvas'),captureContext=captureCanvas.getContext('2d',{alpha:false}),trace=new DeadwatchTrace.TraceRecorder({build:'Deadwatch 0.36.162 Campaign Watch Rank',sampleHz:5}),capture=new DeadwatchCapture.CaptureSession(captureCanvas,{fps:30,bitsPerSecond:2400000});let previousPlayer=null,paused=false,acc=0,last=0,lastStatus='menu',toastLeft=0,threatLeft=0,trainNoticeLeft=0,hitLeft=0;const scoreFeedback={amount:0,gainLeft:0,note:'',noteLeft:0,priority:0};const STEP=1/120;const visual={flashes:[],blasts:[],tracers:[],splats:[],pool:Deadwatch3D.createEffectPool(256),shake:0};
+const C=DeadwatchCore,$=s=>document.getElementById(s),game=new C.Game(),renderer=new Deadwatch3D.Renderer3D($('gameCanvas')),gunEffects=new DeadwatchGunEffects.Overlay($('gunEffectsCanvas'),renderer),captureCanvas=document.createElement('canvas'),captureContext=captureCanvas.getContext('2d',{alpha:false}),trace=new DeadwatchTrace.TraceRecorder({build:'Deadwatch 0.36.163 Steam Deck Controls',sampleHz:5}),capture=new DeadwatchCapture.CaptureSession(captureCanvas,{fps:30,bitsPerSecond:2400000});let previousPlayer=null,paused=false,acc=0,last=0,lastStatus='menu',toastLeft=0,threatLeft=0,trainNoticeLeft=0,hitLeft=0;const scoreFeedback={amount:0,gainLeft:0,note:'',noteLeft:0,priority:0};const STEP=1/120;const visual={flashes:[],blasts:[],tracers:[],splats:[],pool:Deadwatch3D.createEffectPool(256),shake:0};
 const P=DeadwatchProgression;
 const depotSequence=new Deadwatch3D.DepotSequence();
 const depotSound=new DepotRadioAudio(()=>{audio=audio||new(window.AudioContext||window.webkitAudioContext)();return audio;});
@@ -474,6 +474,9 @@ function continueMissionReward(){
 }
 function handleStatus(){handleBaseStatus();if(!activeMissionReward&&missionRewards.length)showMissionReward(missionRewards.shift());}
 function openRewardUpgrades(){if(!activeMissionReward)return;++rewardAnimation;document.body.dataset.watchReturn='true';openLocker();}
+// The desktop build targets Steam Deck/gamepad first; browser builds switch when a pad connects.
+const packagedGamepadBuild=new URLSearchParams(location.search).get('controls')==='gamepad';
+if(packagedGamepadBuild)document.body.dataset.inputMode='gamepad';
 // Controller menus use the existing buttons, fields and confirmation handlers.
 let controllerNav={direction:'',next:0,panel:null};
 function controllerPanel(){
@@ -530,6 +533,7 @@ function controllerMenu(pad){
 }
 function controllerConnection(pad){
  controllerNav={direction:'',next:0,panel:null};
+ document.body.dataset.inputMode=pad||packagedGamepadBuild?'gamepad':'touch';
  const text=pad?'CONTROLLER CONNECTED · D-pad / left stick: menus · A: select · B: back':'CONTROLLER DISCONNECTED · Reconnect or use touch / keyboard';
  for(const el of document.querySelectorAll('[data-controller-hint]')){el.hidden=false;el.textContent=text;}
  if(!pad&&!paused&&['playing','loot','exiting'].includes(game.status)){togglePause();toast('Controller disconnected · game paused',3);}
@@ -879,7 +883,8 @@ function hud(){
   const t=game.interaction?.total?game.interaction.elapsed/game.interaction.total:(offer.saved||0)/offer.duration;
   uiValue($('interactionHold'),'hidden',offer.kind==='route'||!offer.enabled);uiStyle($('interactionFill'),'width',Math.min(100,t*100)+'%');
   uiValue(button,'hidden',offer.kind==='route'||simple&&!offer.enabled);uiValue(button.dataset,'enabled',String(offer.enabled));uiAttr(button,'aria-disabled',String(!offer.enabled));
-  uiText(button,offer.enabled?(t>0?(tap?'STARTING ':'USING ')+Math.round(t*100)+'%':tap?'TAP USE':'HOLD USE'):'UNAVAILABLE');
+  const useLabel=document.body.dataset.inputMode==='gamepad'?'LB':'USE';
+  uiText(button,offer.enabled?(t>0?(tap?'STARTING ':'USING ')+Math.round(t*100)+'%':tap?'TAP '+useLabel:'HOLD '+useLabel):'UNAVAILABLE');
  }else{
   uiValue(button,'hidden',true);
   uiValue(panel,'hidden',!nearby||!nearby.armory);
@@ -1025,4 +1030,3 @@ if(debugToolsEnabled&&location.search.includes('autostart=1'))start('campaign');
 if(recoveredReward?.xp)toast('PREVIOUS RUN RECOVERED · +'+recoveredReward.xp+' XP / '+recoveredReward.credits+' CR',2);
 requestAnimationFrame(frame);
 })();
-

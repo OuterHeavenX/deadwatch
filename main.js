@@ -51,10 +51,13 @@ function createWindow() {
         const result = await mainWindow.webContents.executeJavaScript(`({
           title: document.title,
           canvas: !!document.querySelector('#gameCanvas'),
-          input: typeof DeadwatchInput === 'object'
+          input: typeof DeadwatchInput === 'object',
+          inputMode: document.body.dataset.inputMode,
+          touchHidden: getComputedStyle(document.querySelector('#touch')).display === 'none',
+          deckPrompts: !!document.querySelector('#deckControls')
         })`);
         console.log(JSON.stringify(result));
-        app.exit(result.canvas && result.input ? 0 : 1);
+        app.exit(result.canvas && result.input && result.inputMode === 'gamepad' && result.touchHidden && result.deckPrompts ? 0 : 1);
       } catch (error) {
         console.error(error);
         app.exit(1);
@@ -62,7 +65,9 @@ function createWindow() {
     });
   }
 
-  mainWindow.loadFile(path.join(__dirname, 'deadwatch-index.html'));
+  mainWindow.loadFile(path.join(__dirname, 'deadwatch-index.html'), {
+    query: { controls: 'gamepad' }
+  });
 }
 
 app.on('second-instance', () => {
