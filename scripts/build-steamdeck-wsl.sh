@@ -17,5 +17,14 @@ tar -C "$project_dir" --exclude=node_modules --exclude=dist --exclude=.git -cf -
 cd "$build_dir"
 npm ci
 npm run dist:linux
+package_version="$(node -p "require('./package.json').version")"
 cp dist/*.AppImage dist/*.tar.gz "$project_dir/dist/"
+cp "$project_dir/Deadwatch-SteamDeck.sh" "$project_dir/dist/"
+chmod +x "$project_dir/dist/Deadwatch-SteamDeck.sh"
+(
+  cd "$project_dir/dist"
+  tar -czf "Deadwatch-${package_version}-SteamDeck.tar.gz" \
+    "Deadwatch-${package_version}-x86_64.AppImage" \
+    "Deadwatch-SteamDeck.sh"
+)
 ls -lh dist/*.AppImage dist/*.tar.gz

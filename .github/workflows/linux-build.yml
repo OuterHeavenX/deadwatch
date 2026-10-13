@@ -20,12 +20,19 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run dist:linux
+      - name: Package Steam Deck launcher
+        run: |
+          cp Deadwatch-SteamDeck.sh dist/
+          chmod +x dist/Deadwatch-SteamDeck.sh
+          cd dist
+          tar -czf "Deadwatch-${{ github.ref_name }}-SteamDeck.tar.gz" Deadwatch-*.AppImage Deadwatch-SteamDeck.sh
       - uses: actions/upload-artifact@v4
         with:
           name: deadwatch-steam-deck
           path: |
             dist/*.AppImage
             dist/*.tar.gz
+            dist/*SteamDeck.tar.gz
       - name: Add packages to tagged release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
@@ -33,3 +40,4 @@ jobs:
           files: |
             dist/*.AppImage
             dist/*.tar.gz
+            dist/*SteamDeck.tar.gz

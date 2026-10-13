@@ -9,8 +9,13 @@ const softwareRendering = process.argv.includes('--software-rendering');
 if (process.platform === 'linux') {
   app.commandLine.appendSwitch('enable-features', 'UseOzonePlatform');
   app.commandLine.appendSwitch('ozone-platform', 'x11');
+  app.commandLine.appendSwitch('disable-gpu-sandbox');
 }
-if (softwareRendering) app.commandLine.appendSwitch('use-gl', 'swiftshader');
+if (softwareRendering) {
+  app.commandLine.appendSwitch('use-gl', 'angle');
+  app.commandLine.appendSwitch('use-angle', 'swiftshader');
+  app.commandLine.appendSwitch('enable-unsafe-swiftshader');
+}
 
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) app.quit();
